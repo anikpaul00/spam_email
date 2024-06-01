@@ -3,8 +3,12 @@ import pickle
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
-from tensorflow.keras.initializers import Orthogonal, GlorotUniform  # Modified import
+from tensorflow.keras.initializers import Orthogonal, GlorotUniform
 import os
+import tensorflow as tf
+
+# Check TensorFlow version
+st.write(f"TensorFlow version: {tf.__version__}")
 
 # Paths to the model and tokenizer files
 model_path = 'my_model.h5'
@@ -18,15 +22,26 @@ if not os.path.exists(tokenizer_path):
 
 # Load the model with custom objects
 custom_objects = {
-    'Orthogonal': Orthogonal(),  # Instantiate the initializer
-    'GlorotUniform': GlorotUniform()  # Instantiate the initializer
+    'Orthogonal': Orthogonal(),
+    'GlorotUniform': GlorotUniform()
 }
 
-model = load_model(model_path, custom_objects=custom_objects)
+try:
+    model = load_model(model_path, custom_objects=custom_objects)
+except ValueError as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
 # Load the tokenizer
-with open(tokenizer_path, 'rb') as handle:
-    tokenizer = pickle.load(handle)
+try:
+    with open(tokenizer_path, 'rb') as handle:
+        tokenizer = pickle.load(handle)
+except FileNotFoundError:
+    st.error(f"Tokenizer file not found at {tokenizer_path}")
+    st.stop()
+except pickle.UnpicklingError as e:
+    st.error(f"Error loading tokenizer: {e}")
+    st.stop()
 
 # Function to preprocess the input text
 def preprocess_text(text, tokenizer, max_len):
@@ -44,12 +59,15 @@ if st.button("Check Email"):
         # Preprocess the input email content with the correct max_len
         processed_input = preprocess_text(email_input, tokenizer, max_len=500)  # Use max_len=500
         # Predict
-        prediction = model.predict(processed_input)
-        is_spam = (prediction > 0.5).astype("int32")[0][0]
-        
-        if is_spam:
-            st.error("Warning: This email is likely spam!")
-        else:
-            st.success("This email seems to be safe.")
+        try:
+            prediction = model.predict(processed_input)
+            is_spam = (prediction > 0.5).astype("int32")[0][0]
+            
+            if is_spam:
+                st.error("Warning: This email is likely spam!")
+            else:
+                st.success("This email seems to be safe.")
+        except Exception as e:
+            st.error(f"Error making prediction: {e}")
     else:
         st.error("Please enter email content to check.")
