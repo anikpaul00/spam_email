@@ -1,5 +1,5 @@
 streamlit
 nltk
-sklearn
+scikit-learn
 pickle5
 tensorflow
