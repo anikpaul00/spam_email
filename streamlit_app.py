@@ -6,8 +6,8 @@ from tensorflow.keras.models import load_model
 import os
 
 # Paths to the model and tokenizer files
-model_path = 'spam_email/my_model.h5'
-tokenizer_path = 'spam_email/tokenizer.pkl'
+model_path = 'my_model.h5'
+tokenizer_path = 'tokenizer.pkl'
 
 # Check if the files exist
 if not os.path.exists(model_path):
