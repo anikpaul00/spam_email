@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
-from tensorflow.keras.initializers import Orthogonal, glorot_uniform
+from tensorflow.keras.initializers import Orthogonal, GlorotUniform  # Modified import
 import os
 
 # Paths to the model and tokenizer files
@@ -18,8 +18,8 @@ if not os.path.exists(tokenizer_path):
 
 # Load the model with custom objects
 custom_objects = {
-    'Orthogonal': Orthogonal,
-    'GlorotUniform': glorot_uniform
+    'Orthogonal': Orthogonal(),  # Instantiate the initializer
+    'GlorotUniform': GlorotUniform()  # Instantiate the initializer
 }
 
 model = load_model(model_path, custom_objects=custom_objects)
