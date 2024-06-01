@@ -3,6 +3,7 @@ import pickle
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
+from tensorflow.keras.initializers import Orthogonal, glorot_uniform
 import os
 
 # Paths to the model and tokenizer files
@@ -15,8 +16,15 @@ if not os.path.exists(model_path):
 if not os.path.exists(tokenizer_path):
     st.error(f"Tokenizer file not found at {tokenizer_path}")
 
-# Load the model and tokenizer
-model = load_model(model_path)
+# Load the model with custom objects
+custom_objects = {
+    'Orthogonal': Orthogonal,
+    'GlorotUniform': glorot_uniform
+}
+
+model = load_model(model_path, custom_objects=custom_objects)
+
+# Load the tokenizer
 with open(tokenizer_path, 'rb') as handle:
     tokenizer = pickle.load(handle)
 
