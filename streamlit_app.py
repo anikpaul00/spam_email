@@ -25,7 +25,7 @@ def load_image(file_name):
         encoded_string = base64.b64encode(image_file.read()).decode()
     return encoded_string
 
-cyber_image = load_image("cyber_security_image.jpg")
+cyber_image = load_image("security.jpg")
 st.markdown(f'<img src="data:image/jpg;base64,{cyber_image}" alt="Cyber Security" width="700">', unsafe_allow_html=True)
 
 # Check TensorFlow version
