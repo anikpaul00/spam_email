@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import pickle
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -6,6 +7,26 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.initializers import Orthogonal, GlorotUniform
 import os
 import tensorflow as tf
+
+# Apply custom CSS
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+local_css("style.css")
+
+# Title and description
+st.title("Spam Email Detector")
+st.markdown("### A Streamlit App with a Cyber Security Theme")
+
+# Load a cyber security image
+def load_image(file_name):
+    with open(file_name, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    return encoded_string
+
+cyber_image = load_image("cyber_security_image.jpg")
+st.markdown(f'<img src="data:image/jpg;base64,{cyber_image}" alt="Cyber Security" width="700">', unsafe_allow_html=True)
 
 # Check TensorFlow version
 st.write(f"TensorFlow version: {tf.__version__}")
@@ -62,7 +83,7 @@ if st.button("Check Email"):
         try:
             prediction = model.predict(processed_input)
             is_spam = (prediction > 0.5).astype("int32")[0][0]
-            
+
             if is_spam:
                 st.error("Warning: This email is likely spam!")
             else:
@@ -71,3 +92,10 @@ if st.button("Check Email"):
             st.error(f"Error making prediction: {e}")
     else:
         st.error("Please enter email content to check.")
+
+# Sidebar content
+st.sidebar.title("About")
+st.sidebar.info("""
+    This is a spam email detection app.
+    Themed around Cyber Security.
+""")
