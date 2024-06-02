@@ -1,0 +1,19 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #1b262c;
+    color: #bbe1fa;
+}
+
+h1 {
+    color: #0f4c75;
+}
+
+.stButton>button {
+    background-color: #0f4c75;
+    color: #bbe1fa;
+}
+
+.stSidebar {
+    background-color: #1b262c;
+    color: #bbe1fa;
+}
